@@ -1,0 +1,45 @@
+﻿@model MathGame
+
+<h2>Math Game</h2>
+
+<p>Operation: @Model.Operation</p>
+<p>Target Result: @Model.TargetResult</p>
+
+<form asp-action="CheckAnswer" method="post" id="mathGameForm">
+    <p>Select two numbers:</p>
+
+    @for (int i = 0; i < Model.Numbers.Count; i++)
+    {
+        <input type="checkbox" name="selectedNumbers" value="@Model.Numbers[i]" class="number-checkbox" /> @Model.Numbers[i] <br />
+    }
+
+    <input type="hidden" name="operation" value="@Model.Operation" />
+    <input type="hidden" name="targetResult" value="@Model.TargetResult" />
+
+    <button type="submit" id="submitBtn" disabled>Check Answer</button>
+</form>
+
+@if (ViewBag.IsCorrect != null)
+{
+    if (ViewBag.IsCorrect)
+    {
+        <p>Correct! Well done!</p>
+    }
+    else
+    {
+        <p>Incorrect. Try again!</p>
+    }
+}
+
+<script>
+    // JavaScript to enable the submit button only when exactly two checkboxes are selected
+    const checkboxes = document.querySelectorAll('.number-checkbox');
+    const submitBtn = document.getElementById('submitBtn');
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            const checkedBoxes = document.querySelectorAll('.number-checkbox:checked');
+            submitBtn.disabled = checkedBoxes.length !== 2;
+        });
+    });
+</script>
